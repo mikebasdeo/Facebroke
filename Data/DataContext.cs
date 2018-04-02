@@ -1,7 +1,7 @@
 using Facebroke.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DatingApp.API.Data
+namespace Facebroke.API.Data
 {
     public class DataContext : DbContext
     {

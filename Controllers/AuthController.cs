@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Facebroke.API.Data;
+using Facebroke.API.Dtos;
 using Facebroke.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,23 +23,23 @@ namespace Facebroke.API.Controllers
         //methods
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(string username, string password){
+        public async Task<IActionResult> Register([FromBody]UserForRegisterDto userForRegisterDto){
             //TODO:validate request
 
             //store all usernames as lowercase.
-            username = username.ToLower();
+            userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
 
-            if(await _repo.UserExists(username))
+            if(await _repo.UserExists(userForRegisterDto.Username))
             {
                 return BadRequest("Username is already taken.");
             }
 
             //create a new user
             var userToCreate = new User{
-                Username = username
+                Username = userForRegisterDto.Username
             };
 
-            var createdUser = await _repo.Register(userToCreate, password);
+            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
 
             //return successful creation.
             return StatusCode(201);

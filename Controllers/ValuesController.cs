@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Facebroke.API.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 namespace Facebroke.API.Controllers
 {
     [Route("api/[controller]")]

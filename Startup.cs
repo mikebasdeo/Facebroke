@@ -29,6 +29,7 @@ namespace Facebroke.API
             //needs connection string from appsettings.json.
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc();
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,8 +39,11 @@ namespace Facebroke.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
 
+            //keep MVC last here. MVC returns the request to the client. Headers must be added to the request first.
             app.UseMvc();
+            
         }
     }
 }

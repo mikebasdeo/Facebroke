@@ -4,7 +4,7 @@ using Facebroke.API.Data;
 using Facebroke.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DatingApp.API.Data
+namespace Facebroke.API.Data
 {
     public class AuthRepository : IAuthRepository
     {

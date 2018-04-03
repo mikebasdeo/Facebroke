@@ -7,6 +7,7 @@ using Facebroke.API.Data;
 using Facebroke.API.Dtos;
 using Facebroke.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Facebroke.API.Controllers
@@ -18,17 +19,20 @@ namespace Facebroke.API.Controllers
 
         //attributes
         private readonly IAuthRepository _repo;
-
+        private readonly IConfiguration _config;
 
         //constructors
-        public AuthController(IAuthRepository repo){
+        public AuthController(IAuthRepository repo, IConfiguration config)
+        {
+            _config = config;
             _repo = repo;
         }
 
 
         //methods
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody]UserForRegisterDto userForRegisterDto){
+        public async Task<IActionResult> Register([FromBody]UserForRegisterDto userForRegisterDto)
+        {
 
 
             //store all usernames as lowercase.
@@ -36,20 +40,22 @@ namespace Facebroke.API.Controllers
 
 
 
-            if(await _repo.UserExists(userForRegisterDto.Username))
+            if (await _repo.UserExists(userForRegisterDto.Username))
             {
                 ModelState.AddModelError("Username", "Username already exists.");
             }
 
-           
+
             //validate request using DTO validators
-            if(!ModelState.IsValid){
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
 
 
             //create a new user
-            var userToCreate = new User{
+            var userToCreate = new User
+            {
                 Username = userForRegisterDto.Username
             };
 
@@ -69,7 +75,7 @@ namespace Facebroke.API.Controllers
 
 
             //if not successful,
-            if(userFromRepo == null)
+            if (userFromRepo == null)
             {
                 return Unauthorized();
             }
@@ -77,7 +83,8 @@ namespace Facebroke.API.Controllers
 
             //If successful, create a JSON Web Token for speedy future authentication
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("super secret key");
+            var key = Encoding.ASCII.GetBytes(_config.GetSection("AppSettings:Token").Value);
+            //var key = Encoding.ASCII.GetBytes("super secret key");
 
 
             //what do we want inside our token?
@@ -98,11 +105,11 @@ namespace Facebroke.API.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok( new {tokenString});
+            return Ok(new { tokenString });
 
         }
-        
 
-        
+
+
     }
 }

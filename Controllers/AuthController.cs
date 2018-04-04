@@ -70,6 +70,8 @@ namespace Facebroke.API.Controllers
         public async Task<IActionResult> Login([FromBody]UserForLoginDto userForLoginDto)
         {
 
+            throw new Exception("Computer says no!");
+
             //get user from repo and try to login.
             var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
 

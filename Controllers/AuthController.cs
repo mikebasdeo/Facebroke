@@ -34,11 +34,10 @@ namespace Facebroke.API.Controllers
         public async Task<IActionResult> Register([FromBody]UserForRegisterDto userForRegisterDto)
         {
 
-
             //store all usernames as lowercase.
-            userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
-
-
+            if(!string.IsNullOrEmpty(userForRegisterDto.Username)){
+                userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
+            }
 
             if (await _repo.UserExists(userForRegisterDto.Username))
             {
